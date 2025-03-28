@@ -1,73 +1,72 @@
-import static java.lang.Integer.parseInt;
 import static javax.swing.JOptionPane.*;
-
+import static java.lang.Integer.parseInt;
+import static java.lang.Double.parseDouble;
 public class App {
-
-    private ListaDupla<Produto> listaProduto = new ListaDupla<>();
-    private ListaDupla<Fornecedor> listaFornecedor = new ListaDupla<>();
+    
+    static ListaDupla<Produto> listaProduto = new ListaDupla<>();
+    static ListaDupla<Fornecedor> listaFornecedor = new ListaDupla<>();
 
     public static void main(String[] args) throws Exception {
+        
         menuPrincipal();
+
     }
 
-    private static void menuPrincipal() {
-        String menu = "1. Cadastrar produto\n 2. Pesquisar produto \n3. Pesquisar fornecedor\n 4. Finalizar";
+    public static void menuPrincipal() {
+        String menu = "1. Cadastrar produto\n2. Pesquisar produto\n3. Pesquisar fornecedor\n4. Finalizar";
         int opcao;
         int resposta;
 
-        while (true) {
+        while(true) {
             opcao = parseInt(showInputDialog(menu));
-            if (opcao == 4) {
+            if(opcao == 4) {
                 resposta = showConfirmDialog(null, "Tem certeza que deseja sair?");
-                if (resposta == YES_OPTION) {
+                if(resposta == YES_OPTION) {
                     break;
                 }
-            } else if (opcao < 1 || opcao > 4) {
-                showMessageDialog(null, "Opção inválida!");
-            } else {
-                switch (opcao) {
+            }
+            if(opcao < 1 || opcao > 4) {
+                showMessageDialog(null, "Opção inválida");
+            }
+            else {
+                switch(opcao) {
                     case 1:
                         cadastrarProduto();
-                        break;
-                    case 2:
-                        pesquisarProduto();
-                        break;
-                    case 3:
-                        pesquisarFornecedor();
-                        break;
-                    default:
                         break;
                 }
             }
         }
     }
 
-    private static void cadastrarProduto() {
+    public static void cadastrarProduto() {
         No<Fornecedor> aux = pesquisar();
         String nome;
-        double preco;
+        double valorUnitario;
         int qtdEstoque;
-
-        if (aux != null) {
+        
+        if(aux == null) {
             cadastrarFornecedor();
         }
 
+        // cadastro do produto
         nome = showInputDialog("Nome do produto");
-        preco = parseDouble(showInputDialog("Valor unitario do produto"));
-        qtdEstoque = parseInt(showInputDialog("Quantidade em estoque do produto"));
-        listaProduto.inserir(new Produto(nome, preco, qtdEstoque, aux.getDado()));
+        valorUnitario = parseDouble(showInputDialog("Valor unitário do produto"));
+        qtdEstoque = parseInt(showInputDialog("Quantidade em estoque"));
+        listaProduto.inserir(new Produto(nome, valorUnitario, qtdEstoque, aux.getDado()));
     }
 
     private static void cadastrarFornecedor() {
         String nome;
         int cnpj;
-        nome = showInputDialog("Nome do fornecedor");
-        cnpj = parseInt(showInputDialog("CNPJ do fornecedor"));
-        listaFornecedor.inserir(new Fornecedor(cnpj, nome));
+        nome = showInputDialog("nome do fornecedor");
+        cnpj = parseInt(showInputDialog("cnpj"));
+        listaFornecedor.inserir(new Fornecedor(nome, cnpj));
     }
 
-    private static No<Fornecedor> pesquisar() {
-        int cnpj = parseInt(showInputDialog("Digite o CNPJ do fornecedor"));
+    public static No<Fornecedor> pesquisar() {
+        int cnpj = parseInt(showInputDialog("CNPJ para pesquisa"));
         return listaFornecedor.pesquisar(new Fornecedor(cnpj));
     }
+
+
 }
