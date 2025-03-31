@@ -39,33 +39,45 @@ public class App {
     }
 
     public static void cadastrarProduto() {
-        No<Fornecedor> aux = pesquisar();
+        Fornecedor fornecedor = pesquisar();
         String nome;
         double valorUnitario;
         int qtdEstoque;
         
-        if(aux == null) {
-            cadastrarFornecedor();
+        if(fornecedor == null) {
+            fornecedor = cadastrarFornecedor();
         }
 
         // cadastro do produto
         nome = showInputDialog("Nome do produto");
         valorUnitario = parseDouble(showInputDialog("Valor unitário do produto"));
         qtdEstoque = parseInt(showInputDialog("Quantidade em estoque"));
-        listaProduto.inserir(new Produto(nome, valorUnitario, qtdEstoque, aux.getDado()));
+        listaProduto.inserir(new Produto(nome, valorUnitario, qtdEstoque, fornecedor));
     }
 
-    private static void cadastrarFornecedor() {
+    private static Fornecedor cadastrarFornecedor() {
         String nome;
         int cnpj;
+        Fornecedor fornecedor;
+
         nome = showInputDialog("nome do fornecedor");
         cnpj = parseInt(showInputDialog("cnpj"));
-        listaFornecedor.inserir(new Fornecedor(nome, cnpj));
+        fornecedor = new Fornecedor(nome, cnpj);
+        listaFornecedor.inserir(fornecedor);
+        return fornecedor;
     }
 
-    public static No<Fornecedor> pesquisar() {
+    public static Fornecedor pesquisar() {
+        Fornecedor fornecedor = null;
+        No<Fornecedor> aux;
+
         int cnpj = parseInt(showInputDialog("CNPJ para pesquisa"));
-        return listaFornecedor.pesquisar(new Fornecedor(cnpj));
+        aux = listaFornecedor.pesquisar(new Fornecedor(cnpj));
+        if(aux != null) {
+            fornecedor = aux.getDado();
+        }
+
+        return fornecedor; 
     }
 
 
