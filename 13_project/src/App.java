@@ -23,6 +23,19 @@ public class App {
 
         for(int i = 0; i < expressao.length(); i++){
             ch = expressao.charAt(i);
+            if (ch == ' '){
+                switch (ch) {
+                    case '+':
+                    case '-':
+                    case:'*':
+                    case '/':
+                    case '%':
+                    while (!pilha.isEmpty() && (prioridade(pilha.peek()) >= prioridade(ch))) {
+                            polonesa += pilha.pop();
+                        }
+                       
+
+                }
         }
 
         return polonesa;
