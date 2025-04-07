@@ -4,6 +4,9 @@ class Ligacao {
     int pedagios;
 
     Ligacao(String destino, double distancia, double fatorTrafego, int pedagios) {
+        if (distancia < 0 || fatorTrafego < 0 || pedagios < 0) {
+            throw new IllegalArgumentException("Valores negativos não são permitidos!");
+        }
         this.destino = destino;
         this.distancia = distancia;
         this.fatorTrafego = fatorTrafego;

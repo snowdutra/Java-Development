@@ -66,6 +66,12 @@ public class SistemaEntregas {
             double trafego = Double.parseDouble(trafegoStr);
             int pedagios = Integer.parseInt(pedagiosStr);
 
+            // Verificação de valores negativos
+            if (distancia < 0 || trafego < 0 || pedagios < 0) {
+                JOptionPane.showMessageDialog(null, "Valores negativos não são permitidos!");
+                return;
+            }
+
             Cidade origem = buscarCidade(cidadeOrigem);
             if (origem != null) {
                 origem.adicionarLigacao(new Ligacao(cidadeDestino, distancia, trafego, pedagios));
