@@ -12,44 +12,59 @@ public class App {
         String menu = "1. Comprar\n2. Vender\n3. Finalizar";
         int opcao;
 
-        while(true) {
-            opcao = parseInt(showInputDialog(menu));
-            switch(opcao) {
-                case 1:
-                    comprar();
-                    break;
-                case 2:
-                    vender();
-                    break;
-                default:
-                    showMessageDialog(null, "Opção inválida");
+        while (true) {
+            try {
+                opcao = parseInt(showInputDialog(menu));
+                switch (opcao) {
+                    case 1:
+                        comprar();
+                        break;
+                    case 2:
+                        vender();
+                        break;
+                    case 3:
+                        showMessageDialog(null, "Finalizando o programa...");
+                        return; // Encerra o loop e o programa
+                    default:
+                        showMessageDialog(null, "Opção inválida");
+                }
+            } catch (NumberFormatException e) {
+                showMessageDialog(null, "Entrada inválida. Por favor, insira um número.");
             }
         }
-
     }
+
     private static void vender() {
-        int quantidade_Vendida = parseInt(showInputDialog("Quantidade vendida"));
-        double valor = parseDouble(showInputDialog("Valor da ação"));
-        int qtd;
-        Acao acao;
-        
-        while(quantidade_Vendida > 0 && !carteira.isEmpty()) {
-            acao = carteira.peek();
-            qtd = Math.min(quantidade_Vendida, acao.getQuantidade());
-            lucro += qtd * (valor - acao.getValor());
-            quantidade_Vendida -= qtd;
-            acao.setQuantidade(acao.getQuantidade() - qtd);
-            if(acao.getQuantidade() == 0) {
-                carteira.poll(); // carteira.remove(acao); 
+        try {
+            int quantidade_Vendida = parseInt(showInputDialog("Quantidade vendida"));
+            double valor = parseDouble(showInputDialog("Valor da ação"));
+            int qtd;
+            Acao acao;
+
+            while (quantidade_Vendida > 0 && !carteira.isEmpty()) {
+                acao = carteira.peek();
+                qtd = Math.min(quantidade_Vendida, acao.getQuantidade());
+                lucro += qtd * (valor - acao.getValor());
+                quantidade_Vendida -= qtd;
+                acao.setQuantidade(acao.getQuantidade() - qtd);
+                if (acao.getQuantidade() == 0) {
+                    carteira.poll(); // Remove a ação da fila
+                }
             }
+            showMessageDialog(null, "Lucro R$: " + lucro);
+        } catch (NumberFormatException e) {
+            showMessageDialog(null, "Entrada inválida. Por favor, insira valores numéricos.");
         }
-        showMessageDialog(null, "Lucro R$: " + lucro);
     }
 
     private static void comprar() {
-        String nome = showInputDialog("Nome da ação");
-        int quantidade = parseInt(showInputDialog("Quantidade comprada"));
-        double valor = parseDouble(showInputDialog("Valor da ação"));
-        carteira.add(new Acao(nome, quantidade, valor));
+        try {
+            String nome = showInputDialog("Nome da ação");
+            int quantidade = parseInt(showInputDialog("Quantidade comprada"));
+            double valor = parseDouble(showInputDialog("Valor da ação"));
+            carteira.add(new Acao(nome, quantidade, valor));
+        } catch (NumberFormatException e) {
+            showMessageDialog(null, "Entrada inválida. Por favor, insira valores numéricos.");
+        }
     }
 }

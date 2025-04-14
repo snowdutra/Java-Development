@@ -19,6 +19,10 @@ public class Util {
                 case 2:
                     vender();
                     break;
+                case 3:
+                    showMessageDialog(null, "Finalizando o programa...");
+                    return; // Encerra o loop e o programa
+                // Adiciona uma opção para finalizar o programa
                 default:
                     showMessageDialog(null, "Opção inválida");
             }
