@@ -5,25 +5,92 @@ public class SistemaEntregas {
 
     public static void main(String[] args) {
         while (true) {
-            String opcao = JOptionPane.showInputDialog(null, """
-                                                             Escolha uma opção:
-                                                             1. Cadastrar cidade
-                                                             2. Cadastrar ligação
-                                                             3. Listar cidades e ligações
-                                                             4. Buscar ligação
-                                                             5. Calcular tempo total da rota
-                                                             6. Filtrar rotas por tempo máximo
-                                                             7. Sair""");
+            String[] menuPrincipal = {
+                "Gerenciar Cidades",
+                "Gerenciar Ligações",
+                "Sair"
+            };
 
-            if (opcao == null || (opcao.equals("7") && confirmarSaida())) break;
+            int escolhaPrincipal = JOptionPane.showOptionDialog(
+                null,
+                "Escolha uma opção:",
+                "Menu Principal",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                menuPrincipal,
+                menuPrincipal[0]
+            );
 
-            switch (opcao) {
-                case "1" -> cadastrarCidade();
-                case "2" -> cadastrarLigacao();
-                case "3" -> listarCidades();
-                case "4" -> buscarLigacao();
-                case "5" -> calcularTempoRota();
-                case "6" -> filtrarRotasPorTempo();
+            if (escolhaPrincipal == -1 || (escolhaPrincipal == 2 && confirmarSaida())) break;
+
+            switch (escolhaPrincipal) {
+                case 0 -> menuCidades();
+                case 1 -> menuLigacoes();
+                default -> JOptionPane.showMessageDialog(null, "Opção inválida!");
+            }
+        }
+    }
+
+    private static void menuCidades() {
+        String[] opcoesCidades = {
+            "Cadastrar cidade",
+            "Listar cidades",
+            "Voltar"
+        };
+
+        while (true) {
+            int escolha = JOptionPane.showOptionDialog(
+                null,
+                "Escolha uma opção:",
+                "Menu de Cidades",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                opcoesCidades,
+                opcoesCidades[0]
+            );
+
+            if (escolha == -1 || escolha == 2) break;
+
+            switch (escolha) {
+                case 0 -> cadastrarCidade();
+                case 1 -> listarCidades();
+                default -> JOptionPane.showMessageDialog(null, "Opção inválida!");
+            }
+        }
+    }
+
+    private static void menuLigacoes() {
+        String[] opcoesLigacoes = {
+            "Cadastrar ligação",
+            "Buscar ligação",
+            "Calcular tempo total da rota",
+            "Filtrar rotas por tempo máximo",
+            "Editar ligação",
+            "Voltar"
+        };
+
+        while (true) {
+            int escolha = JOptionPane.showOptionDialog(
+                null,
+                "Escolha uma opção:",
+                "Menu de Ligações",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                opcoesLigacoes,
+                opcoesLigacoes[0]
+            );
+
+            if (escolha == -1 || escolha == 5) break;
+
+            switch (escolha) {
+                case 0 -> cadastrarLigacao();
+                case 1 -> buscarLigacao();
+                case 2 -> calcularTempoRota();
+                case 3 -> filtrarRotasPorTempo();
+                case 4 -> editarLigacao();
                 default -> JOptionPane.showMessageDialog(null, "Opção inválida!");
             }
         }
@@ -66,7 +133,6 @@ public class SistemaEntregas {
             double trafego = Double.parseDouble(trafegoStr);
             int pedagios = Integer.parseInt(pedagiosStr);
 
-            // Verificação de valores negativos
             if (distancia < 0 || trafego < 0 || pedagios < 0) {
                 JOptionPane.showMessageDialog(null, "Valores negativos não são permitidos!");
                 return;
@@ -179,6 +245,99 @@ public class SistemaEntregas {
             JOptionPane.showMessageDialog(null, resultado);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido.");
+        }
+    }
+
+    private static void editarLigacao() {
+        String cidadeOrigem = JOptionPane.showInputDialog("Cidade de origem:");
+        String cidadeDestino = JOptionPane.showInputDialog("Cidade de destino:");
+        if (cidadeOrigem == null || cidadeDestino == null || cidadeOrigem.equals("") || cidadeDestino.equals("")) {
+            JOptionPane.showMessageDialog(null, "Entrada inválida!");
+            return;
+        }
+
+        Cidade origem = buscarCidade(cidadeOrigem);
+        if (origem != null) {
+            Ligacao ligacao = origem.buscarLigacao(cidadeDestino);
+            if (ligacao != null) {
+                String[] opcoesEdicao = {
+                    "Alterar destino",
+                    "Alterar distância",
+                    "Alterar fator de tráfego",
+                    "Alterar número de pedágios",
+                    "Cancelar"
+                };
+
+                int escolha = JOptionPane.showOptionDialog(
+                    null,
+                    "O que deseja editar?",
+                    "Editar Ligação",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    opcoesEdicao,
+                    opcoesEdicao[0]
+                );
+
+                switch (escolha) {
+                    case 0 -> {
+                        String novoDestino = JOptionPane.showInputDialog("Novo destino:");
+                        if (novoDestino != null && !novoDestino.equals("")) {
+                            ligacao.destino = novoDestino;
+                            JOptionPane.showMessageDialog(null, "Destino alterado com sucesso!");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Destino inválido!");
+                        }
+                    }
+                    case 1 -> {
+                        String novaDistanciaStr = JOptionPane.showInputDialog("Nova distância:");
+                        if (novaDistanciaStr != null && !novaDistanciaStr.isEmpty()) {
+                            double novaDistancia = Double.parseDouble(novaDistanciaStr);
+                            if (novaDistancia >= 0) {
+                                ligacao.distancia = novaDistancia;
+                                JOptionPane.showMessageDialog(null, "Distância alterada com sucesso!");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Distância inválida!");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido.");
+                        }
+                    }
+                    case 2 -> {
+                        String novoTrafegoStr = JOptionPane.showInputDialog("Novo fator de tráfego:");
+                        if (novoTrafegoStr != null && !novoTrafegoStr.isEmpty()) {
+                            double novoTrafego = Double.parseDouble(novoTrafegoStr);
+                            if (novoTrafego >= 0) {
+                                ligacao.fatorTrafego = novoTrafego;
+                                JOptionPane.showMessageDialog(null, "Fator de tráfego alterado com sucesso!");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Fator de tráfego inválido!");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido.");
+                        }
+                    }
+                    case 3 -> {
+                        String novoPedagioStr = JOptionPane.showInputDialog("Novo número de pedágios:");
+                        if (novoPedagioStr != null && !novoPedagioStr.isEmpty()) {
+                            int novoPedagio = Integer.parseInt(novoPedagioStr);
+                            if (novoPedagio >= 0) {
+                                ligacao.pedagios = novoPedagio;
+                                JOptionPane.showMessageDialog(null, "Número de pedágios alterado com sucesso!");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Número de pedágios inválido!");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido.");
+                        }
+                    }
+                    default -> JOptionPane.showMessageDialog(null, "Edição cancelada!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Ligação não encontrada!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Cidade de origem não encontrada!");
         }
     }
 }
