@@ -32,3 +32,5 @@ public class Acao {
     public void setValor(double valor) {
         this.valor = valor;
     }
+
+}
