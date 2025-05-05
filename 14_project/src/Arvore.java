@@ -60,4 +60,47 @@ public class Arvore<T extends Comparable<T>> {
             preOrdem(ref.getDireita());
         }
     }
+
+    public void emOrdem() {
+        emOrdem(raiz);
+    }
+
+    private void emOrdem(No<T> ref) {
+        if (ref != null) {
+            emOrdem(ref.getEsquerda());
+            System.out.print(ref.getDado() + " ");
+            emOrdem(ref.getDireita());
+        }
+    }
+
+    public void posOrdem() {
+        posOrdem(raiz);
+    }
+
+    private void posOrdem(No<T> ref) {
+        if (ref != null) {
+            posOrdem(ref.getEsquerda());
+            posOrdem(ref.getDireita());
+            System.out.print(ref.getDado() + " ");
+        }
+    }
+
+    public boolean pesquisar(T dado) {
+        return pesquisar(raiz, dado);
+    }
+
+    private boolean pesquisar(No<T> ref, T dado) {
+        if (ref == null) {
+            return false;
+        }
+
+        int cmp = dado.compareTo(ref.getDado());
+        if (cmp == 0) {
+            return true;
+        } else if (cmp < 0) {
+            return pesquisar(ref.getEsquerda(), dado);
+        } else {
+            return pesquisar(ref.getDireita(), dado);
+        }
+    }
 }
