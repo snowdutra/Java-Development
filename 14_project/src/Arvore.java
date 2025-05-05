@@ -103,4 +103,15 @@ public class Arvore<T extends Comparable<T>> {
             return pesquisar(ref.getDireita(), dado);
         }
     }
+    
+    public void remover(T dado) {
+        raiz = remover(raiz, dado);
+    }
+
+    private No<T> remover(No<T> ref, T dado) {
+        if (ref == null) {
+            return null;
+        }
+
+        int cmp = dado.compareTo(ref.getDado());
 }
